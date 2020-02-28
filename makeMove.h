@@ -1,6 +1,5 @@
-#ifndef MAKEMOVE_H
-#define MAKEMOVE_H
+#ifndef 
+#define 
 
-void makeMove(char zuege[], char currentPlayer);
 
 #endif
