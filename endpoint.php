@@ -1,5 +1,6 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
 header('Content-Type: text/json; charset=utf-8');
 
 /*
@@ -11,22 +12,22 @@ header('Content-Type: text/json; charset=utf-8');
 require ("config.php");
 require ("api.php");
 
-$req = htmlspecialchars($_GET['req']);
-$pin = htmlspecialchars($_GET['pin']);
+$req = htmlspecialchars($_REQUEST['req']);
+$pin = htmlspecialchars($_REQUEST['pin']);
 
-$game_id = htmlspecialchars($_GET['game_id']);
-$player_id = htmlspecialchars($_GET['player_id']);
-$field = htmlspecialchars($_GET['field']);
+$game_id = htmlspecialchars($_REQUEST['game_id']);
+$player_id = htmlspecialchars($_REQUEST['player_id']);
+$field = htmlspecialchars($_REQUEST['field']);
 
 $api = new Api();
 
 if($req == "" || $pin == ""){
-    echo $api->JsonResponse(false, ['msg' => 'Bitte alle Felder angeben.']);
+    echo $api->JsonResponse(false, ['msg' => 'Anfrage abgelehnt.']);
     die();
 }
 
 if(!$api->checkPin($pin)){
-    echo $api->JsonResponse(false, ['msg' => 'Unbekannte PIN.']);
+    echo $api->JsonResponse(false, ['msg' => 'Es wurde kein Konto zu dieser PIN gefunden.']);
     die();
 }
 
@@ -76,6 +77,10 @@ function makeMoveReq($game_id, $player_id, $field){
     }
 
     $check_win = $api->checkWin($game_id);
+	if($check_win == 'N'){
+		$api->JsonResponse(false, ['msg' => 'Es ist unentschieden.']);
+		die();
+	}
     if($check_win == 'X' || $check_win == 'O'){
         $api->sql_query('UPDATE games SET player_won = ? WHERE id = ?', [$check_win, $game->id]);
     }
@@ -123,7 +128,7 @@ function checkGame($game_id, $checkWin = true){
     if($checkWin){
         $game = $api->getGame($game_id);
         if($game->player_won == 'X' || $game->player_won == 'O'){
-            echo $api->JsonResponse(false, ['msg' => 'Das Spiel ist nicht mehr aktiv.']);
+            echo $api->JsonResponse(false, ['msg' => 'Der Spieler '.$game->player_won.' hat gewonnen!']);
             die();
         }
     }

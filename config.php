@@ -6,7 +6,7 @@
  */
 
 // MySQL
-$conf_mysql_addr    =   'basten-it.eu'; // MySQL-Server | IP-Adresse
-$conf_mysql_user    =   'tictactoe';    // MySQL-Server | Benutzer
-$conf_mysql_pass    =   'rV!9f44w'; // MySQL-Server | Benutzer Passwort
-$conf_mysql_data    =   'tictactoe';    // MySQL-Server | Datenbank
+$conf_mysql_addr    =   'localhost'; // MySQL-Server | IP-Adresse
+$conf_mysql_user    =   'TikTakToe';    // MySQL-Server | Benutzer
+$conf_mysql_pass    =   '@TikTakToeITA91'; // MySQL-Server | Benutzer Passwort
+$conf_mysql_data    =   'TikTakToe';    // MySQL-Server | Datenbank

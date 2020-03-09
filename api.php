@@ -149,33 +149,53 @@ class Api {
     public function checkWin($game_id){
         $game = $this->getGame($game_id);
         $gamefield = $this->getGamefield($game->gamefield_id);
-
-        if($gamefield->field1 == $gamefield->field2 && $gamefield->field2 == $gamefield->field3){
-            return $game->currentPlayer;
-        }
-        if($gamefield->field4 == $gamefield->field5 && $gamefield->field5 == $gamefield->field6){
-            return $game->currentPlayer;
-        }
-        if($gamefield->field7 == $gamefield->field8 && $gamefield->field8 == $gamefield->field9){
-            return $game->currentPlayer;
-        }
-
-        if($gamefield->field1 == $gamefield->field4 && $gamefield->field4 == $gamefield->field7){
-            return $game->currentPlayer;
-        }
-        if($gamefield->field2 == $gamefield->field5 && $gamefield->field5 == $gamefield->field8){
-            return $game->currentPlayer;
-        }
-        if($gamefield->field3 == $gamefield->field6 && $gamefield->field6 == $gamefield->field9){
-            return $game->currentPlayer;
-        }
-
-        if($gamefield->field1 == $gamefield->field5 && $gamefield->field5 == $gamefield->field9){
-            return $game->currentPlayer;
-        }
-        if($gamefield->field3 == $gamefield->field5 && $gamefield->field5 == $gamefield->field7){
-            return $game->currentPlayer;
-        }
+		
+		if($gamefield->field1 != "" && $gamefield->field2 != "" && $gamefield->field3 != ""){
+			if($gamefield->field1 == $gamefield->field2 && $gamefield->field2 == $gamefield->field3){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field4 != "" && $gamefield->field5 != "" && $gamefield->field6 != ""){
+			if($gamefield->field4 == $gamefield->field5 && $gamefield->field5 == $gamefield->field6){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field7 != "" && $gamefield->field8 != "" && $gamefield->field9 != ""){
+			if($gamefield->field7 == $gamefield->field8 && $gamefield->field8 == $gamefield->field9){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field1 != "" && $gamefield->field4 != "" && $gamefield->field7 != ""){
+			if($gamefield->field1 == $gamefield->field4 && $gamefield->field4 == $gamefield->field7){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field2 != "" && $gamefield->field5 != "" && $gamefield->field8 != ""){
+			if($gamefield->field2 == $gamefield->field5 && $gamefield->field5 == $gamefield->field8){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field3 != "" && $gamefield->field6 != "" && $gamefield->field9 != ""){
+			if($gamefield->field3 == $gamefield->field6 && $gamefield->field6 == $gamefield->field9){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field1 != "" && $gamefield->field5 != "" && $gamefield->field9 != ""){
+			if($gamefield->field1 == $gamefield->field5 && $gamefield->field5 == $gamefield->field9){
+				return $game->currentPlayer;
+			}
+		}
+		if($gamefield->field3 != "" && $gamefield->field5 != "" && $gamefield->field7 != ""){
+			if($gamefield->field3 == $gamefield->field5 && $gamefield->field5 == $gamefield->field7){
+				return $game->currentPlayer;
+			}
+		}
+		
+		if($gamefield->field1 != "" && $gamefield->field2 != "" && $gamefield->field3 != ""
+		   && $gamefield->field4 != "" && $gamefield->field5 != "" && $gamefield->field6 != ""
+		   && $gamefield->field7 != "" && $gamefield->field8 != "" && $gamefield->field9 != ""){
+			return 'N';
+		}
 
         return false;
     }
