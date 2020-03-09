@@ -3,14 +3,26 @@ package de.ita91.tictactoe;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button[][] buttons = new Button[3][3];
+    Handler handler = new Handler();
+    Runnable runnable;
+    int delay = 1*1000;
+
+    public String dumpVar = "";
+    public String baseAPI = "https://ita91.de/ttt/endpoint.php";
+    public String roomID = "0";
+
+
 
     private boolean player1Turn = true;
 
@@ -28,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         textViewPlayer1 = findViewById(R.id.text_view_p1);
-        textViewPlayer2 = findViewById(R.id.text_view_p2);
+        textViewPlayer2 = findViewById(R.id.text_view_p);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -50,31 +62,75 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (!((Button) v).getText().toString().equals("")) {
-            return;
-        }
-
-        if (player1Turn) {
-            ((Button) v).setText("X");
-        } else {
-            ((Button) v).setText("O");
-        }
-
-        roundCount++;
-
-        if (checkForWin()) {
-            if (player1Turn) {
-                player1Wins();
-            } else {
-                player2Wins();
+        roomID = findViewById(R.id.editText).toString();
+        if(!roomID.equals("0") && !roomID.equals("")){
+            if (!((Button) v).getText().toString().equals("")) {
+                return;
             }
-        } else if (roundCount == 9) {
-            draw();
-        } else {
-            player1Turn = !player1Turn;
-        }
 
+            // Checking Room ID via API
+            if(!checkRoomID(roomID)){
+                showMSG("Room ID is invalid!");
+                return;
+            }
+
+            // Trying move via API
+            if(!(makeMove(findViewById(R.id.editText).toString(), v.getId()))){
+                showMSG("Field is already claimed!");
+                return;
+            }
+
+
+
+            roundCount++;
+
+        } else {
+            showMSG("No active game running!");
+        }
     }
+
+    // FUNCTIONS USED FOR ONLINE MULTIPLAYER
+
+    private void showMSG(String message){
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private boolean makeMove(String uRoomID, int fieldID){
+
+        return true;
+    }
+
+    private boolean checkRoomID(String uRoomID){
+
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                roomID = findViewById(R.id.editText).toString();
+                if(!roomID.equals("0") && !roomID.equals("")){
+
+
+
+                }
+
+                handler.postDelayed(runnable, delay);
+            }
+        }, delay);
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(runnable);
+        super.onPause();
+    }
+
+    // END FUNCTIONS FOR ONLINE MULTIPLAYER
 
     private boolean checkForWin() {
         String[][] field = new String[3][3];
@@ -118,20 +174,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void player1Wins() {
         player1Points++;
-        Toast.makeText(this, "Spieler X hat gewonnen!", Toast.LENGTH_SHORT).show();
+        showMSG("Spieler X hat gewonnen!");
         updatePointsText();
         resetBoard();
     }
 
     private void player2Wins() {
         player2Points++;
-        Toast.makeText(this, "Spieler O hat gewonnen!", Toast.LENGTH_SHORT).show();
+        showMSG("Spieler O hat gewonnen!");
         updatePointsText();
         resetBoard();
     }
 
     private void draw() {
-        Toast.makeText(this, "Unentschieden", Toast.LENGTH_SHORT).show();
+        showMSG("Keiner der Spieler hat gewonnen");
         resetBoard();
     }
 
