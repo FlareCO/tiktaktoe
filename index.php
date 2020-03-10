@@ -84,10 +84,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="bot.js"></script>
 
     <script>
-        let gameId, Pin, playerId;
-        Pin = 080120;
+        let gameId, Pin, playerId, botId;
+        Pin = 123456;
 		gameId = "L33T";
 		displayMSG("Kannst du gewinnen?");
 		
@@ -134,7 +135,8 @@
                     'pin': Pin
                 },
                 success: function(res){
-					playerId = res.data.game.playerX_id;
+                    playerId = res.data.game.playerX_id;
+                    botId = res.data.game.playerO_id;
 					gameId = res.data.game.id;
 					$('#room').text(`Tik Tak Toe (#${gameId})`);
                     if(res.data.msg !== undefined){
@@ -162,6 +164,9 @@
                     console.log(res);
                     if(res.success){
                         updateGameField(res.data.field);
+                        setTimeout(() => {
+                            botMakeMove(Pin, gameId);
+                        }, 500);
                     }
                     if(res.success == false){
                         displayMSG(res.data.msg);

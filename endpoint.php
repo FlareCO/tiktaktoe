@@ -11,6 +11,7 @@ header('Content-Type: text/json; charset=utf-8');
 
 require ("config.php");
 require ("api.php");
+require ("bot.class.php");
 
 $req = htmlspecialchars($_REQUEST['req']);
 $pin = htmlspecialchars($_REQUEST['pin']);
@@ -44,10 +45,45 @@ switch ($req){
         makeMoveReq($game_id, $player_id, $field);
         break;
 
+    case 'botMakeMove':
+        botMakeMoveReq($game_id, $field);
+        break;
+
     default:
         echo $api->JsonResponse(false, []);
         die();
         break;
+}
+
+function botMakeMoveReq($game_id, $field){
+    $api = new Api();
+
+    checkGame($game_id);
+
+    $game = $api->getGame($game_id);
+
+    if($game->currentPlayer == 'X'){
+        die($api->JsonResponse(false, ['msg' => 'Bot Fehler.']));
+    }
+
+    if(!$api->makeMove($game_id, $field)){
+        echo $api->JsonResponse(false, ['msg' => 'Das Feld ist bereits belegt.']);
+        die();
+    }
+
+    $check_win = $api->checkWin($game_id);
+	if($check_win == 'N'){
+		$api->JsonResponse(false, ['msg' => 'Es ist unentschieden.']);
+		die();
+	}
+    if($check_win == 'X' || $check_win == 'O'){
+        $api->sql_query('UPDATE games SET player_won = ? WHERE id = ?', [$check_win, $game->id]);
+    }
+
+    $api->changePlayer($game_id);
+	
+    echo $api->JsonResponse(true, ['game' => $api->getGame($game_id), 'field' => $api->getGamefield($game->gamefield_id)]);
+    die();
 }
 
 function makeMoveReq($game_id, $player_id, $field){
@@ -89,6 +125,29 @@ function makeMoveReq($game_id, $player_id, $field){
 
     echo $api->JsonResponse(true, ['game' => $api->getGame($game_id), 'field' => $api->getGamefield($game->gamefield_id)]);
     die();
+}
+
+function botMove($game_id, $gameFieldsFetch){
+	$api = new Api();
+	$bot = new Bot();
+	$bot->setField($gameFieldsFetch);
+	do{
+		$botField = $bot->makeMove();
+	}while($gameFieldsFetch[$botField] != '');
+	if(!$api->makeMove($game_id, $botField)){
+		$api->changePlayer($game_id);
+        return false;
+    }
+	$check_win = $api->checkWin($game_id);
+	if($check_win == 'N'){
+		$api->JsonResponse(false, ['msg' => 'Es ist unentschieden.']);
+		die();
+	}
+    if($check_win == 'X' || $check_win == 'O'){
+        $api->sql_query('UPDATE games SET player_won = ? WHERE id = ?', [$check_win, $game->id]);
+    }
+	$api->changePlayer($game_id);
+	return true;
 }
 
 function getGameReq($game_id){

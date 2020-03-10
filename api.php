@@ -66,6 +66,22 @@ class Api {
         $query = $this->sql_query('SELECT * FROM gamefields WHERE id = ? LIMIT 1', [$id]);
         return $query->fetchObject();
     }
+	
+	public function fetchGameFields($id){
+		$query = $this->sql_query('SELECT * FROM gamefields WHERE id = ? LIMIT 1', [$id]);
+		$row = $query->fetchObject();
+		$field_arr = [];
+		$field_arr[] = $row->field1;
+		$field_arr[] = $row->field2;
+		$field_arr[] = $row->field3;
+		$field_arr[] = $row->field4;
+		$field_arr[] = $row->field5;
+		$field_arr[] = $row->field6;
+		$field_arr[] = $row->field7;
+		$field_arr[] = $row->field8;
+		$field_arr[] = $row->field9;
+		return $field_arr;
+	}
 
     public function getGameFieldId($id){
         $this->checkGame($id);
