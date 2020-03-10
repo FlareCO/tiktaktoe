@@ -170,7 +170,7 @@ function botMakeMove(Pin, GameId){
             - 8 9
         */
         field = 1;
-    }else if(field9 == 'X' && field5 == 'X' && field2 != 'O'){
+    }else if(field8 == 'X' && field5 == 'X' && field2 != 'O'){
         /*
             1 + 3
             4 - 6
