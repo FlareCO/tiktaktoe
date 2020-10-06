@@ -28,5 +28,5 @@ int main()
 
 	} while (win == 0);
 
-	cout << endl << "Der Spieler " << changePlayer(currentPlayer) << " hat gewonnen!" << endl << endl;
+	cout << endl << "Der Spieler \"" << changePlayer(currentPlayer) << "\" hat gewonnen!" << endl << endl;
 }
