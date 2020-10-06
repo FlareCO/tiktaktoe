@@ -1,5 +1,5 @@
 # Tik Tak Toe
-## von Dustin Klaas
+von Dustin Klaas
 
 Website: [ITA91.de/ttt](https://ita91.de/ttt)
 
